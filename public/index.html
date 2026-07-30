@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karass or Granfaloon?</title>
+<meta name="description" content="A question for the table we shared at AGI-26.">
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --ink: #ece7dc;
+    --ink-dim: #a9a49a;
+    --gold: #d9b466;
+    --line: #2a2e38;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: Georgia, 'Iowan Old Style', 'Palatino Linotype', serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+  .eyebrow {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 12px;
+    color: var(--gold);
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-size: 42px;
+    text-align: center;
+    margin: 0 0 6px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+  .sub {
+    text-align: center;
+    color: var(--ink-dim);
+    font-style: italic;
+    font-size: 17px;
+    margin: 0 0 40px;
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 26px 28px;
+    margin-bottom: 28px;
+  }
+  .terms {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  @media (min-width: 560px) {
+    .terms { grid-template-columns: 1fr 1fr; }
+  }
+  .term h3 {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    margin: 0 0 8px;
+  }
+  .term p {
+    margin: 0;
+    font-size: 16px;
+    color: var(--ink);
+  }
+  .cite {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 12px;
+    color: var(--ink-dim);
+    text-align: center;
+    margin-top: 18px;
+  }
+  .people {
+    text-align: center;
+    font-size: 15px;
+    color: var(--ink-dim);
+    margin: 0 0 4px;
+  }
+  .people strong { color: var(--ink); font-weight: 600; }
+  .context {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    color: var(--ink-dim);
+    text-align: center;
+    margin: 0 0 40px;
+  }
+  .question {
+    font-size: 28px;
+    text-align: center;
+    margin: 0 0 32px;
+    line-height: 1.35;
+  }
+  .question em { color: var(--gold); font-style: normal; }
+
+  form {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-dim);
+    margin: 18px 0 8px;
+  }
+  select, textarea, input[type=text] {
+    width: 100%;
+    background: #0c0e12;
+    border: 1px solid var(--line);
+    color: var(--ink);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 15px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  textarea { min-height: 90px; resize: vertical; }
+  .vote-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .vote-btn {
+    flex: 1;
+    min-width: 120px;
+    padding: 14px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: #0c0e12;
+    color: var(--ink);
+    font-size: 15px;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .vote-btn:hover { border-color: var(--gold); }
+  .vote-btn.selected {
+    border-color: var(--gold);
+    background: rgba(217,180,102,0.12);
+    color: var(--gold);
+  }
+  .submit-btn {
+    width: 100%;
+    margin-top: 22px;
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    background: var(--gold);
+    color: #1a1408;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .submit-btn:disabled { opacity: 0.5; cursor: default; }
+  .hp { position: absolute; left: -9999px; }
+
+  .thanks {
+    display: none;
+    text-align: center;
+    font-size: 18px;
+    padding: 20px 0;
+  }
+  .thanks.show { display: block; }
+  .err { color: #d97066; font-size: 13px; text-align: center; margin-top: 10px; display: none; }
+
+  .qr-block {
+    text-align: center;
+  }
+  .qr-block img {
+    width: 180px;
+    height: 180px;
+    border-radius: 10px;
+    background: #fff;
+    padding: 10px;
+  }
+  .qr-cap {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 13px;
+    color: var(--ink-dim);
+    margin-top: 10px;
+  }
+
+  footer {
+    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 12px;
+    color: #57575f;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">AGI-26 · San Francisco</div>
+  <h1>Karass or Granfaloon?</h1>
+  <p class="sub">A question for the table we shared.</p>
+
+  <div class="panel">
+    <div class="terms">
+      <div class="term">
+        <h3>Karass</h3>
+        <p>A team of people flung together by something larger than any of them
+        arranged — bound by a real, if invisible, purpose. You don't audition for
+        one. You just find out, later, that you were in it.</p>
+      </div>
+      <div class="term">
+        <h3>Granfaloon</h3>
+        <p>A false karass. A group that feels like a team because of a label —
+        same conference badge, same room, same hashtag — but has no genuine
+        destiny in common at all.</p>
+      </div>
+    </div>
+    <p class="cite">— terms borrowed from Kurt Vonnegut, <em>Cat's Cradle</em></p>
+  </div>
+
+  <p class="people">
+    Met at AGI-26: <strong>Scott Wolfson</strong>, <strong>Kes Sampanthar</strong>,
+    <strong>Elana Yonah</strong>, <strong>Todd Bezenek</strong> — and <strong>Mike Wolf</strong>.
+  </p>
+  <p class="context">Five people, one round table, a hallway full of AGI talk. This page is asking the obvious follow-up question out loud.</p>
+
+  <p class="question">So — are we a real <em>karass</em>, or just a <em>granfaloon</em> that happened to sit together?</p>
+
+  <div class="panel">
+    <form id="voteForm" name="karass-response" method="POST" data-netlify="true" netlify-honeypot="topic">
+      <input type="hidden" name="form-name" value="karass-response">
+      <p class="hp"><label>Don't fill this out: <input name="topic"></label></p>
+
+      <input type="hidden" name="verdict" id="verdictField" value="">
+      <div class="vote-row" id="voteRow">
+        <button type="button" class="vote-btn" data-v="Karass">Karass</button>
+        <button type="button" class="vote-btn" data-v="Granfaloon">Granfaloon</button>
+        <button type="button" class="vote-btn" data-v="Still deciding">Still deciding</button>
+      </div>
+
+      <label for="name">Who's answering</label>
+      <select name="name" id="name">
+        <option value="">Choose your name</option>
+        <option>Scott Wolfson</option>
+        <option>Kes Sampanthar</option>
+        <option>Elana Yonah</option>
+        <option>Todd Bezenek</option>
+        <option>Mike Wolf</option>
+        <option value="__other">Someone else</option>
+      </select>
+      <input type="text" name="name_other" id="nameOther" placeholder="Your name" style="display:none; margin-top:8px;">
+
+      <label for="note">Why (optional)</label>
+      <textarea name="note" id="note" placeholder="One or two sentences on what you're actually seeing..."></textarea>
+
+      <button type="submit" class="submit-btn" id="submitBtn" disabled>Send my answer</button>
+      <p class="err" id="errMsg">Pick Karass, Granfaloon, or Still deciding first.</p>
+    </form>
+    <div class="thanks" id="thanks">Logged. Thank you — Mike will fold this into the next round.</div>
+  </div>
+
+  <div class="panel qr-block">
+    <img src="qr.svg" alt="QR code linking to this page" id="qrImg">
+    <p class="qr-cap">Scan to open this on your own phone.</p>
+  </div>
+
+  <footer>
+    Built by Mike Wolf + Claude (Sonnet 5), first rev — 2026-07-30. More context to follow.
+  </footer>
+
+</div>
+
+<script>
+  var voteRow = document.getElementById('voteRow');
+  var verdictField = document.getElementById('verdictField');
+  var submitBtn = document.getElementById('submitBtn');
+  var nameSel = document.getElementById('name');
+  var nameOther = document.getElementById('nameOther');
+  var form = document.getElementById('voteForm');
+  var thanks = document.getElementById('thanks');
+  var errMsg = document.getElementById('errMsg');
+
+  voteRow.querySelectorAll('.vote-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      voteRow.querySelectorAll('.vote-btn').forEach(function(b) { b.classList.remove('selected'); });
+      btn.classList.add('selected');
+      verdictField.value = btn.getAttribute('data-v');
+      submitBtn.disabled = false;
+      errMsg.style.display = 'none';
+    });
+  });
+
+  nameSel.addEventListener('change', function() {
+    nameOther.style.display = (nameSel.value === '__other') ? 'block' : 'none';
+  });
+
+  function encode(data) {
+    return Object.keys(data).map(function(k) {
+      return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]);
+    }).join('&');
+  }
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (!verdictField.value) {
+      errMsg.style.display = 'block';
+      return;
+    }
+    var finalName = (nameSel.value === '__other') ? nameOther.value : nameSel.value;
+    var payload = {
+      'form-name': 'karass-response',
+      verdict: verdictField.value,
+      name: finalName || '(unnamed)',
+      note: document.getElementById('note').value
+    };
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: encode(payload)
+    }).then(function() {
+      form.style.display = 'none';
+      thanks.classList.add('show');
+    }).catch(function() {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send my answer';
+      errMsg.textContent = 'Something went wrong — try again in a moment.';
+      errMsg.style.display = 'block';
+    });
+  });
+</script>
+</body>
+</html>
